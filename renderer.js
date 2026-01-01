@@ -7,17 +7,30 @@ const swapBtn = document.getElementById('swapBtn');
 const sourceLang = document.getElementById('sourceLang');
 const targetLang = document.getElementById('targetLang');
 const loading = document.getElementById('loading');
+const inputCount = document.getElementById('inputCount');
+const outputCount = document.getElementById('outputCount');
 
-let currentDirection = 'de-en';
+let currentDirection = 'en-de';
 let debounceTimer = null;
 let currentRequestId = 0; // Track request to prevent stale results
+
+function updateCharCounts() {
+    inputCount.textContent = `${inputText.value.length} characters`;
+    outputCount.textContent = `${outputText.innerText.length} characters`;
+
+    // Don't count placeholder text if it's the specific placeholder
+    if (outputText.textContent === 'Translation will appear here...' || outputText.textContent === 'Translation error' || outputText.textContent === 'No translation found') {
+        outputCount.textContent = '0 characters';
+    }
+}
 
 async function doTranslate() {
     const text = inputText.value.trim();
 
     if (!text) {
-        outputText.textContent = 'Translation';
-        outputText.className = 'text-white/50 text-4xl select-text';
+        outputText.textContent = 'Translation will appear here...';
+        outputText.className = 'w-full flex-1 text-gray-300 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
+        updateCharCounts();
         return;
     }
 
@@ -33,16 +46,18 @@ async function doTranslate() {
         if (requestId === currentRequestId) {
             if (result) {
                 outputText.textContent = result;
-                outputText.className = 'text-white/95 text-4xl select-text';
+                outputText.className = 'w-full flex-1 text-gray-800 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
             } else {
                 outputText.textContent = 'No translation found';
-                outputText.className = 'text-white/50 text-4xl select-text';
+                outputText.className = 'w-full flex-1 text-gray-300 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
             }
+            updateCharCounts();
         }
     } catch (err) {
         if (requestId === currentRequestId) {
             outputText.textContent = 'Translation error';
-            outputText.className = 'text-red-400/80 text-4xl select-text';
+            outputText.className = 'w-full flex-1 text-red-400 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
+            updateCharCounts();
         }
     } finally {
         if (requestId === currentRequestId) {
@@ -55,6 +70,7 @@ async function doTranslate() {
 function translateWithDebounce() {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(doTranslate, 300); // 300ms debounce
+    updateCharCounts(); // Immediate update for input count
 }
 
 // Input event
@@ -74,8 +90,15 @@ swapBtn.addEventListener('click', () => {
 
     // Swap input and output if there's valid output
     const currentOutput = outputText.textContent;
-    if (currentOutput && currentOutput !== 'Translation' && currentOutput !== 'No translation found' && currentOutput !== 'Translation error') {
-        inputText.value = currentOutput;
+    const trimmedOutput = currentOutput.trim();
+
+    // Check against placeholders (ignoring whitespace)
+    if (trimmedOutput &&
+        trimmedOutput !== 'Translation will appear here...' &&
+        trimmedOutput !== 'No translation found' &&
+        trimmedOutput !== 'Translation error') {
+
+        inputText.value = trimmedOutput;
     }
 
     translateWithDebounce();

@@ -54,38 +54,66 @@
     </style>
 </head>
 
-<body class="overflow-hidden font-sans select-none">
-    <div class="bg-wine-500 rounded-[2rem] p-6 shadow-2xl border-2 border-white/10 h-screen flex flex-col relative">
-        <!-- Header -->
-        <div class="flex justify-center items-center gap-6 mb-6 drag-handle shrink-0">
-            <span id="sourceLang" class="text-white/90 text-3xl font-medium min-w-[180px] text-center">German</span>
+<body class="overflow-hidden font-sans select-none bg-transparent">
+    <!-- Main Card -->
+    <div class="bg-white rounded-[2rem] shadow-2xl h-screen flex flex-col relative overflow-hidden">
+
+        <!-- Header (Drag Handle) -->
+        <div
+            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-white z-10">
+            <!-- German Pill -->
+            <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
+                <span id="sourceLang" class="text-gray-800 text-lg font-medium min-w-[80px] text-center">English</span>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+
+            <!-- Swap Button -->
             <button id="swapBtn"
-                class="bg-white/15 hover:bg-white/25 active:bg-white/30 rounded-2xl px-5 py-3 text-white/90 transition-colors flex items-center justify-center no-drag"
-                title="Swap languages">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                    <path d="M8 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4m4-4H3" />
+                class="text-green-700 hover:text-green-800 transition-colors p-2 rounded-full hover:bg-green-50 no-drag">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
             </button>
-            <span id="targetLang" class="text-white/90 text-3xl font-medium min-w-[180px] text-center">English</span>
-        </div>
 
-        <!-- Panels -->
-        <div class="flex bg-wine-600 rounded-3xl overflow-hidden flex-1 min-h-0">
-            <div class="flex-1 p-6 h-full">
-                <textarea id="inputText"
-                    class="w-full h-full bg-transparent resize-none text-white/95 text-4xl placeholder-white/50"
-                    placeholder="Type here..." autofocus></textarea>
-            </div>
-            <div class="w-1 bg-white/20"></div>
-            <div class="flex-1 p-6 h-full overflow-auto">
-                <div id="outputText" class="text-white/50 text-4xl select-text">Translation</div>
+            <!-- English Pill -->
+            <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
+                <span id="targetLang" class="text-gray-800 text-lg font-medium min-w-[80px] text-center">German</span>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
             </div>
         </div>
 
-        <!-- Loading indicator -->
-        <div id="loading" class="hidden absolute top-6 right-6">
-            <div class="w-12 h-12 border-[6px] border-white/30 border-t-white/90 rounded-full animate-spin"></div>
+        <!-- Content Area -->
+        <div class="flex flex-1 min-h-0">
+            <!-- Source Panel (White) -->
+            <div class="flex-1 flex flex-col p-8 bg-white relative group">
+                <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Source Text</div>
+                <textarea id="inputText" spellcheck="false"
+                    class="w-full flex-1 bg-transparent resize-none text-gray-800 text-3xl placeholder-gray-300 outline-none leading-relaxed selection:bg-green-100 selection:text-green-900"
+                    placeholder="Enter your text here..." autofocus></textarea>
+                <div id="inputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
+            </div>
+
+            <!-- Divider (Optional, using bg color diff instead) -->
+
+            <!-- Translation Panel (Cream) -->
+            <div class="flex-1 flex flex-col p-8 bg-[#FDFBF7] relative">
+                <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Translation</div>
+                <div id="outputText"
+                    class="w-full flex-1 text-gray-300 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto">
+                    Translation will appear here...
+                </div>
+                <!-- Loading Indicator -->
+                <div id="loading" class="hidden absolute top-8 right-8">
+                    <div class="w-6 h-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
+                </div>
+                <div id="outputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
+            </div>
         </div>
+
     </div>
     <script src="renderer.js"></script>
 </body>
