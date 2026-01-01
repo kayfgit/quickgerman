@@ -10,7 +10,7 @@ const loading = document.getElementById('loading');
 const inputCount = document.getElementById('inputCount');
 const outputCount = document.getElementById('outputCount');
 
-let currentDirection = 'en-de';
+let currentDirection = 'de-en';
 let debounceTimer = null;
 let currentRequestId = 0; // Track request to prevent stale results
 

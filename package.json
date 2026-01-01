@@ -1,18 +1,24 @@
 {
-  "name": "quickgerman",
-  "version": "1.0.0",
-  "description": "Fast German-English translator with global hotkey",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ."
-  },
-  "keywords": ["german", "english", "translator", "electron"],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "electron": "^28.0.0"
-  },
-  "dependencies": {
-    "uiohook-napi": "^1.5.4"
-  }
+    "name": "quickgerman",
+    "version": "1.0.0",
+    "description": "Fast German-English translator with global hotkey",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "keywords": [
+        "german",
+        "english",
+        "translator",
+        "electron"
+    ],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^28.0.0",
+        "electron-builder": "^26.0.12"
+    },
+    "dependencies": {
+        "uiohook-napi": "^1.5.4"
+    }
 }

@@ -42,8 +42,8 @@ function createWindow() {
         skipTaskbar: true,
         resizable: true,
         show: false,
-        minWidth: 800,
-        minHeight: 500,
+        minWidth: 600,
+        minHeight: 400,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
