@@ -116,6 +116,13 @@ ipcRenderer.on('window-hidden', () => {
     // outputText.textContent = 'Translation';
 });
 
+// Set input from clipboard or other sources
+ipcRenderer.on('set-input', (event, text) => {
+    inputText.value = text;
+    // Trigger translation immediately
+    doTranslate();
+});
+
 // Escape to hide
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {

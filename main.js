@@ -1,7 +1,8 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, clipboard } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { uIOhook, UiohookKey } = require('uiohook-napi');
+const { exec } = require('child_process');
 
 let mainWindow = null;
 let tray = null;
@@ -12,6 +13,9 @@ let shiftPressed = false;
 let qPressed = false;
 
 const stateFile = path.join(app.getPath('userData'), 'window-state.json');
+
+// Fix: Disable hardware acceleration to prevent flickering on Windows with transparent windows
+app.disableHardwareAcceleration();
 
 function loadState() {
     try {
@@ -81,6 +85,11 @@ function createWindow() {
             hideWindow();
         }
     });
+
+    // Handle manual hide request from renderer
+    ipcMain.on('hide-window', () => {
+        hideWindow();
+    });
 }
 
 function centerWindow() {
@@ -142,6 +151,55 @@ function createTray() {
     tray.on('click', toggleWindow);
 }
 
+// Simulates Ctrl+C using VBScript (faster than PowerShell)
+const vbsScriptPath = path.join(app.getPath('userData'), 'simulate_copy.vbs');
+
+function ensureVbsScript() {
+    const vbsContent = `
+Set WshShell = WScript.CreateObject("WScript.Shell")
+WshShell.SendKeys "^c"
+`;
+    try {
+        if (!fs.existsSync(vbsScriptPath)) {
+            fs.writeFileSync(vbsScriptPath, vbsContent);
+        }
+    } catch (e) {
+        console.error('Failed to create VBS script:', e);
+    }
+}
+
+function simulateCopy(callback) {
+    // 1. Clear clipboard to ensure we don't read old data
+    clipboard.clear();
+
+    // 2. Execute VBScript to send Ctrl+C
+    exec(`cscript //Nologo "${vbsScriptPath}"`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            callback('');
+            return;
+        }
+
+        // 3. Poll for clipboard content change (max 500ms)
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        const checkClipboard = setInterval(() => {
+            const text = clipboard.readText();
+            attempts++;
+
+            if (text && text.trim().length > 0) {
+                clearInterval(checkClipboard);
+                callback(text);
+            } else if (attempts >= maxAttempts) {
+                clearInterval(checkClipboard);
+                // Even if empty, callback to finish (maybe user highlighted nothing)
+                callback('');
+            }
+        }, 50); // Check every 50ms
+    });
+}
+
 function setupGlobalHotkey() {
     let ctrlPressed = false;
     let altPressed = false;
@@ -160,7 +218,19 @@ function setupGlobalHotkey() {
 
         // Feature: Toggle with Ctrl + `
         if (ctrlPressed && e.keycode === UiohookKey.Backquote) {
-            toggleWindow();
+            // If window is NOT visible, we assume user might be highlighting text
+            if (!mainWindow || !mainWindow.isVisible()) {
+                simulateCopy((text) => {
+                    showWindow();
+                    if (mainWindow && text && text.trim().length > 0) {
+                        // Send text to renderer
+                        mainWindow.webContents.send('set-input', text);
+                    }
+                });
+            } else {
+                // If already visible, just toggle (hide)
+                toggleWindow();
+            }
         }
 
         // Feature: Force close on Alt + Tab (even if out of focus)
@@ -184,6 +254,7 @@ function setupGlobalHotkey() {
 }
 
 app.whenReady().then(() => {
+    ensureVbsScript();
     createWindow();
     createTray();
     setupGlobalHotkey();
