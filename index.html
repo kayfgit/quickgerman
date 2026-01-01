@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickGerman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'wine': {
+                            500: 'rgba(120, 60, 70, 0.95)',
+                            600: 'rgba(139, 69, 79, 0.9)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .drag-handle {
+            -webkit-app-region: drag;
+            cursor: move;
+        }
+
+        .no-drag {
+            -webkit-app-region: no-drag;
+            cursor: default;
+        }
+
+        body {
+            background: transparent;
+        }
+
+        textarea:focus {
+            outline: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body class="overflow-hidden font-sans select-none">
+    <div class="bg-wine-500 rounded-[2rem] p-6 shadow-2xl border-2 border-white/10 h-screen flex flex-col relative">
+        <!-- Header -->
+        <div class="flex justify-center items-center gap-6 mb-6 drag-handle shrink-0">
+            <span id="sourceLang" class="text-white/90 text-3xl font-medium min-w-[180px] text-center">German</span>
+            <button id="swapBtn"
+                class="bg-white/15 hover:bg-white/25 active:bg-white/30 rounded-2xl px-5 py-3 text-white/90 transition-colors flex items-center justify-center no-drag"
+                title="Swap languages">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <path d="M8 16l-4-4m0 0l4-4m-4 4h18M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+            </button>
+            <span id="targetLang" class="text-white/90 text-3xl font-medium min-w-[180px] text-center">English</span>
+        </div>
+
+        <!-- Panels -->
+        <div class="flex bg-wine-600 rounded-3xl overflow-hidden flex-1 min-h-0">
+            <div class="flex-1 p-6 h-full">
+                <textarea id="inputText"
+                    class="w-full h-full bg-transparent resize-none text-white/95 text-4xl placeholder-white/50"
+                    placeholder="Type here..." autofocus></textarea>
+            </div>
+            <div class="w-1 bg-white/20"></div>
+            <div class="flex-1 p-6 h-full overflow-auto">
+                <div id="outputText" class="text-white/50 text-4xl select-text">Translation</div>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loading" class="hidden absolute top-6 right-6">
+            <div class="w-12 h-12 border-[6px] border-white/30 border-t-white/90 rounded-full animate-spin"></div>
+        </div>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+
+</html>
