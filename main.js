@@ -187,6 +187,14 @@ app.whenReady().then(() => {
     createWindow();
     createTray();
     setupGlobalHotkey();
+
+    // Start on login
+    if (app.isPackaged) {
+        app.setLoginItemSettings({
+            openAtLogin: true,
+            path: app.getPath('exe')
+        });
+    }
 });
 
 app.on('window-all-closed', (e) => {

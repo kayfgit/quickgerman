@@ -4,7 +4,26 @@
     "description": "Fast German-English translator with global hotkey",
     "main": "main.js",
     "scripts": {
-        "start": "electron ."
+        "start": "electron .",
+        "build": "electron-builder",
+        "postinstall": "electron-builder install-app-deps"
+    },
+    "build": {
+        "appId": "com.quickgerman.app",
+        "productName": "QuickGerman",
+        "directories": {
+            "output": "dist",
+            "buildResources": "build"
+        },
+        "win": {
+            "icon": "build/icons/icon.ico",
+            "target": "nsis"
+        },
+        "files": [
+            "**/*",
+            "!dist/*",
+            "!source/*"
+        ]
     },
     "keywords": [
         "german",
