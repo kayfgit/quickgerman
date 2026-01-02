@@ -60,58 +60,107 @@
 
         <!-- Header (Drag Handle) -->
         <div
-            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-white z-10">
+            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-white z-10 relative">
+
             <!-- German Pill -->
-            <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
-                <span id="sourceLang" class="text-gray-800 text-lg font-medium min-w-[80px] text-center">German</span>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+            <div id="header-controls" class="flex justify-center items-center gap-6 transition-opacity duration-300">
+                <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
+                    <span id="sourceLang"
+                        class="text-gray-800 text-lg font-medium min-w-[80px] text-center">German</span>
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+
+                <!-- Swap Button -->
+                <button id="swapBtn"
+                    class="text-green-700 hover:text-green-800 transition-colors p-2 rounded-full hover:bg-green-50 no-drag">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                </button>
+
+                <!-- English Pill -->
+                <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
+                    <span id="targetLang"
+                        class="text-gray-800 text-lg font-medium min-w-[80px] text-center">English</span>
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
             </div>
 
-            <!-- Swap Button -->
-            <button id="swapBtn"
-                class="text-green-700 hover:text-green-800 transition-colors p-2 rounded-full hover:bg-green-50 no-drag">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            <!-- Settings Button (Absolute Right) -->
+            <button id="settingsBtn"
+                class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors no-drag p-2 rounded-full hover:bg-gray-50">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
 
-            <!-- English Pill -->
-            <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
-                <span id="targetLang" class="text-gray-800 text-lg font-medium min-w-[80px] text-center">English</span>
-                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </div>
+            <!-- Back Button (Initially Hidden) -->
+            <button id="backBtn"
+                class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors no-drag p-2 rounded-full hover:bg-gray-50 hidden">
+                <!-- T icon circle -->
+                <div
+                    class="w-6 h-6 rounded-full border-2 border-current flex items-center justify-center font-bold text-xs">
+                    T</div>
+            </button>
         </div>
 
-        <!-- Content Area -->
-        <div class="flex flex-1 min-h-0">
-            <!-- Source Panel (White) -->
-            <div class="flex-1 flex flex-col p-8 bg-white relative group">
-                <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Source Text</div>
-                <textarea id="inputText" spellcheck="false"
-                    class="w-full flex-1 bg-transparent resize-none text-gray-800 text-3xl placeholder-gray-300 outline-none leading-relaxed selection:bg-green-100 selection:text-green-900"
-                    placeholder="Enter your text here..." autofocus></textarea>
-                <div id="inputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
+        <!-- Content Area Wrapper -->
+        <div class="relative flex-1 min-h-0 w-full overflow-hidden">
+
+            <!-- Translator View -->
+            <div id="translator-view"
+                class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out">
+                <div class="flex flex-1 min-h-0">
+                    <!-- Source Panel (White) -->
+                    <div class="flex-1 flex flex-col p-8 bg-white relative group">
+                        <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Source Text
+                        </div>
+                        <textarea id="inputText" spellcheck="false"
+                            class="w-full flex-1 bg-transparent resize-none text-gray-800 text-3xl placeholder-gray-300 outline-none leading-relaxed selection:bg-green-100 selection:text-green-900"
+                            placeholder="Enter your text here..." autofocus></textarea>
+                        <div id="inputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
+                    </div>
+
+                    <!-- Translation Panel (Cream) -->
+                    <div class="flex-1 flex flex-col p-8 bg-[#FDFBF7] relative">
+                        <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Translation
+                        </div>
+                        <div id="outputText"
+                            class="w-full flex-1 text-gray-300 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto">
+                            Translation will appear here...
+                        </div>
+                        <!-- Loading Indicator -->
+                        <div id="loading" class="hidden absolute top-8 right-8">
+                            <div class="w-6 h-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin">
+                            </div>
+                        </div>
+                        <div id="outputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Divider (Optional, using bg color diff instead) -->
+            <!-- Settings View -->
+            <div id="settings-view"
+                class="absolute inset-0 flex flex-col p-8 bg-[#E5E5E5] w-full h-full transition-all duration-500 ease-in-out translate-x-full opacity-0">
+                <h2 class="text-3xl font-handwriting mb-8 text-gray-800"
+                    style="font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;">settings</h2>
 
-            <!-- Translation Panel (Cream) -->
-            <div class="flex-1 flex flex-col p-8 bg-[#FDFBF7] relative">
-                <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Translation</div>
-                <div id="outputText"
-                    class="w-full flex-1 text-gray-300 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto">
-                    Translation will appear here...
+                <div class="flex flex-col gap-6">
+                    <div class="text-2xl font-handwriting text-gray-700"
+                        style="font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;">setting 1</div>
+                    <div class="text-2xl font-handwriting text-gray-700"
+                        style="font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;">setting 2</div>
                 </div>
-                <!-- Loading Indicator -->
-                <div id="loading" class="hidden absolute top-8 right-8">
-                    <div class="w-6 h-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin"></div>
-                </div>
-                <div id="outputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
             </div>
+
         </div>
 
     </div>

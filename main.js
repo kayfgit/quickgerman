@@ -46,8 +46,8 @@ function createWindow() {
         skipTaskbar: true,
         resizable: true,
         show: false,
-        minWidth: 800,
-        minHeight: 400,
+        minWidth: 300,
+        minHeight: 300,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
@@ -133,16 +133,49 @@ function toggleWindow() {
     }
 }
 
+// Smoothly animate window size
+function animateWindowSize(targetWidth, targetHeight) {
+    if (!mainWindow) return;
+
+    const { width: startWidth, height: startHeight } = mainWindow.getBounds();
+    const startTime = Date.now();
+    const duration = 300; // ms
+
+    const animate = () => {
+        const now = Date.now();
+        const progress = Math.min((now - startTime) / duration, 1);
+
+        // Ease out cubic
+        const ease = 1 - Math.pow(1 - progress, 3);
+
+        const newWidth = Math.round(startWidth + (targetWidth - startWidth) * ease);
+        const newHeight = Math.round(startHeight + (targetHeight - startHeight) * ease);
+
+        mainWindow.setSize(newWidth, newHeight);
+
+        if (progress < 1) {
+            setTimeout(animate, 10); // ~100fps typically fine for this
+        } else {
+            mainWindow.setSize(targetWidth, targetHeight); // Ensure final size
+        }
+    };
+
+    animate();
+}
+
+ipcMain.on('resize-window', (event, width, height) => {
+    animateWindowSize(width, height);
+});
+
 function createTray() {
-    const icon = nativeImage.createFromDataURL(
-        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3Njape.org5vuPBoAAADfSURBVDiNpZMxDoJAEEV/LBZGrOxsNBwCL+AFvIGxs/YQHsRbWFhQGAsLExsv4QVs1QIjBRYgsDDZZjP/vzezM7s2EAAngIbGd6AT/VcboNXlmYgEgOu6sW3bNwCPSJKEOI4BcoAWwANefN+PsiyLgARwAMq8ACQBSL1VVQWYv/cEeAP+IpEkSZim6Q/wMRMRRxBEYZqmyLIMiDBJEmQJbNsuO2YBtdaEYYg0TeE4DpIkQQSQZdnCsiyU7TsA/5GR0LQsq0ySJGXHIqC1JggC5HmO3vDxN5EkSVE7cQJ+9hvgF2dZXGJb2wAAAABJRU5ErkJggg=='
-    );
+    const icon = path.join(__dirname, 'build', 'icons', 'icon.ico')
 
     tray = new Tray(icon);
     tray.setToolTip('QuickGerman - Ctrl + ` to toggle');
 
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Show/Hide (Ctrl + `)', click: toggleWindow },
+        { label: 'Settings', click: toggleWindow },
         { type: 'separator' },
         { label: 'Quit', click: () => app.quit() }
     ]);

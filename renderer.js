@@ -13,6 +13,13 @@ const outputCount = document.getElementById('outputCount');
 let currentDirection = 'de-en';
 let debounceTimer = null;
 let currentRequestId = 0; // Track request to prevent stale results
+let isSettingsOpen = false;
+
+const headerControls = document.getElementById('header-controls');
+const settingsBtn = document.getElementById('settingsBtn');
+const backBtn = document.getElementById('backBtn');
+const translatorView = document.getElementById('translator-view');
+const settingsView = document.getElementById('settings-view');
 
 function updateCharCounts() {
     inputCount.textContent = `${inputText.value.length} characters`;
@@ -123,9 +130,60 @@ ipcRenderer.on('set-input', (event, text) => {
     doTranslate();
 });
 
-// Escape to hide
+// Settings Toggle Logic
+function toggleSettings() {
+    isSettingsOpen = !isSettingsOpen;
+
+    if (isSettingsOpen) {
+        // Switch to Settings (Portrait 400x800)
+
+        // 1. Hide Translator View
+        translatorView.classList.add('opacity-0', 'pointer-events-none');
+
+        // 2. Hide Header Controls
+        headerControls.classList.add('opacity-0', 'pointer-events-none');
+
+        // 3. Show Settings View
+        settingsView.classList.remove('translate-x-full', 'opacity-0');
+
+        // 4. Toggle Buttons
+        settingsBtn.classList.add('hidden');
+        backBtn.classList.remove('hidden');
+
+        // 5. Resize Window
+        ipcRenderer.send('resize-window', 400, 800);
+
+    } else {
+        // Switch to Translator (Landscape 800x400)
+
+        // 1. Hide Settings View
+        settingsView.classList.add('translate-x-full', 'opacity-0');
+
+        // 2. Show Header Controls
+        headerControls.classList.remove('opacity-0', 'pointer-events-none');
+
+        // 3. Show Translator View
+        translatorView.classList.remove('opacity-0', 'pointer-events-none');
+
+        // 4. Toggle Buttons
+        settingsBtn.classList.remove('hidden');
+        backBtn.classList.add('hidden');
+
+        // 5. Resize Window
+        ipcRenderer.send('resize-window', 800, 400);
+    }
+}
+
+settingsBtn.addEventListener('click', toggleSettings);
+backBtn.addEventListener('click', toggleSettings);
+
+// Escape to hide (modified to close settings first if open)
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        ipcRenderer.send('hide-window');
+        if (isSettingsOpen) {
+            toggleSettings();
+        } else {
+            ipcRenderer.send('hide-window');
+        }
     }
 });
