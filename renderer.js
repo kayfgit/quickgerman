@@ -150,8 +150,8 @@ function toggleSettings() {
         settingsBtn.classList.add('hidden');
         backBtn.classList.remove('hidden');
 
-        // 5. Resize Window
-        ipcRenderer.send('resize-window', 400, 800);
+        // 5. Switch Mode (Main process handles size)
+        ipcRenderer.send('set-mode', 'settings');
 
     } else {
         // Switch to Translator (Landscape 800x400)
@@ -169,8 +169,8 @@ function toggleSettings() {
         settingsBtn.classList.remove('hidden');
         backBtn.classList.add('hidden');
 
-        // 5. Resize Window
-        ipcRenderer.send('resize-window', 800, 400);
+        // 5. Switch Mode (Main process handles size)
+        ipcRenderer.send('set-mode', 'translation');
     }
 }
 
