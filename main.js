@@ -220,12 +220,14 @@ ipcMain.on('set-mode', (event, mode) => {
 
 function createTray() {
     const icon = path.join(__dirname, 'build', 'icons', 'icon.ico')
+    const settings = loadSettings();
+    const hotkeyDisplay = formatHotkeyForDisplay(settings.hotkey || 'ctrl+`');
 
     tray = new Tray(icon);
-    tray.setToolTip('QuickGerman - Ctrl + ` to toggle');
+    tray.setToolTip(`QuickGerman - ${hotkeyDisplay} to toggle`);
 
     const contextMenu = Menu.buildFromTemplate([
-        { label: 'Show/Hide (Ctrl + `)', click: toggleWindow },
+        { label: `Show/Hide (${hotkeyDisplay})`, click: toggleWindow },
         { label: 'Settings', click: toggleWindow },
         { type: 'separator' },
         { label: 'Quit', click: () => app.quit() }
@@ -284,36 +286,91 @@ function simulateCopy(callback) {
     });
 }
 
+// Format hotkey for display (e.g., "ctrl+`" -> "Ctrl + `")
+function formatHotkeyForDisplay(hotkeyString) {
+    return hotkeyString
+        .split('+')
+        .map(part => part.trim().charAt(0).toUpperCase() + part.trim().slice(1))
+        .join(' + ');
+}
+
+// Parse hotkey string to get modifier and key info
+function parseHotkey(hotkeyString) {
+    const parts = hotkeyString.toLowerCase().split('+');
+    const parsed = {
+        ctrl: false,
+        shift: false,
+        alt: false,
+        key: null,
+        keycode: null
+    };
+
+    parts.forEach(part => {
+        part = part.trim();
+        if (part === 'ctrl') parsed.ctrl = true;
+        else if (part === 'shift') parsed.shift = true;
+        else if (part === 'alt') parsed.alt = true;
+        else {
+            parsed.key = part;
+            // Map key to UiohookKey constant
+            switch (part) {
+                case '`': parsed.keycode = UiohookKey.Backquote; break;
+                case 't': parsed.keycode = UiohookKey.T; break;
+                case 'q': parsed.keycode = UiohookKey.Q; break;
+                case 'g': parsed.keycode = UiohookKey.G; break;
+                default: parsed.keycode = null;
+            }
+        }
+    });
+
+    return parsed;
+}
+
+let currentHotkeyConfig = null;
+
 function setupGlobalHotkey() {
+    // Load hotkey configuration
+    const settings = loadSettings();
+    currentHotkeyConfig = parseHotkey(settings.hotkey || 'ctrl+`');
+
     let ctrlPressed = false;
     let altPressed = false;
+    let shiftPressed = false;
 
-    // Monitor for Ctrl + Backtick (toggle) AND Alt + Tab (force hide)
+    // Monitor for configured hotkey AND Alt + Tab (force hide)
     uIOhook.on('keydown', (e) => {
-        // Ctrl tracking
+        // Track modifier states
         if (e.keycode === UiohookKey.Ctrl || e.keycode === UiohookKey.CtrlRight) {
             ctrlPressed = true;
         }
-
-        // Alt tracking
         if (e.keycode === UiohookKey.Alt || e.keycode === UiohookKey.AltRight) {
             altPressed = true;
         }
+        if (e.keycode === UiohookKey.Shift || e.keycode === UiohookKey.ShiftRight) {
+            shiftPressed = true;
+        }
 
-        // Feature: Toggle with Ctrl + `
-        if (ctrlPressed && e.keycode === UiohookKey.Backquote) {
-            // If window is NOT visible, we assume user might be highlighting text
-            if (!mainWindow || !mainWindow.isVisible()) {
-                simulateCopy((text) => {
-                    showWindow();
-                    if (mainWindow && text && text.trim().length > 0) {
-                        // Send text to renderer
-                        mainWindow.webContents.send('set-input', text);
-                    }
-                });
-            } else {
-                // If already visible, just toggle (hide)
-                toggleWindow();
+        // Feature: Toggle with configured hotkey
+        if (currentHotkeyConfig && currentHotkeyConfig.keycode === e.keycode) {
+            const modifiersMatch =
+                (currentHotkeyConfig.ctrl === ctrlPressed) &&
+                (currentHotkeyConfig.alt === altPressed) &&
+                (currentHotkeyConfig.shift === shiftPressed);
+
+            if (modifiersMatch) {
+                // If window is NOT visible, we assume user might be highlighting text
+                if (!mainWindow || !mainWindow.isVisible()) {
+                    simulateCopy((text) => {
+                        showWindow();
+                        if (mainWindow && text && text.trim().length > 0) {
+                            // Send text to renderer
+                            mainWindow.webContents.send('set-input', text);
+                        }
+                    });
+                } else {
+                    // If already visible, just toggle (hide)
+                    toggleWindow();
+                }
             }
         }
 
@@ -332,6 +389,9 @@ function setupGlobalHotkey() {
         if (e.keycode === UiohookKey.Alt || e.keycode === UiohookKey.AltRight) {
             altPressed = false;
         }
+        if (e.keycode === UiohookKey.Shift || e.keycode === UiohookKey.ShiftRight) {
+            shiftPressed = false;
+        }
     });
 
     uIOhook.start();
@@ -343,7 +403,8 @@ const settingsFile = path.join(app.getPath('userData'), 'settings.json');
 const defaultSettings = {
     spellcheck: true,
     startOnStartup: false,
-    theme: 'light'
+    theme: 'light',
+    hotkey: 'ctrl+`'
 };
 
 function loadSettings() {
@@ -379,6 +440,14 @@ ipcMain.on('set-startup', (event, enabled) => {
         openAtLogin: enabled,
         openAsHidden: false
     });
+});
+
+ipcMain.on('set-hotkey', (event, hotkey) => {
+    currentHotkeyConfig = parseHotkey(hotkey);
+    // Update tray tooltip
+    if (tray) {
+        tray.setToolTip(`QuickGerman - ${formatHotkeyForDisplay(hotkey)} to toggle`);
+    }
 });
 
 app.whenReady().then(() => {

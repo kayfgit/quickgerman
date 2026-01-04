@@ -19,7 +19,8 @@ let isSettingsOpen = false;
 let appSettings = {
     spellcheck: true,
     startOnStartup: false,
-    theme: 'light'
+    theme: 'light',
+    hotkey: 'ctrl+`'
 };
 
 const headerControls = document.getElementById('header-controls');
@@ -32,6 +33,7 @@ const settingsView = document.getElementById('settings-view');
 const spellcheckToggle = document.getElementById('spellcheckToggle');
 const startOnStartupToggle = document.getElementById('startOnStartupToggle');
 const themeSelect = document.getElementById('themeSelect');
+const hotkeySelect = document.getElementById('hotkeySelect');
 const closeSettingsBtn = document.getElementById('closeSettingsBtn');
 
 function updateCharCounts() {
@@ -188,6 +190,7 @@ async function initSettings() {
         spellcheckToggle.checked = appSettings.spellcheck;
         startOnStartupToggle.checked = appSettings.startOnStartup || false;
         themeSelect.value = appSettings.theme || 'light';
+        hotkeySelect.value = appSettings.hotkey || 'ctrl+`';
 
         // Apply Logic
         applySpellcheck(appSettings.spellcheck);
@@ -225,6 +228,12 @@ startOnStartupToggle.addEventListener('change', (e) => {
 themeSelect.addEventListener('change', (e) => {
     appSettings.theme = e.target.value;
     // Theme application logic would go here
+    saveSettings();
+});
+
+hotkeySelect.addEventListener('change', (e) => {
+    appSettings.hotkey = e.target.value;
+    ipcRenderer.send('set-hotkey', e.target.value);
     saveSettings();
 });
 
