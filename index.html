@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -21,6 +21,67 @@
         }
     </script>
     <style>
+        /* Theme Variables */
+        :root[data-theme="light"] {
+            --bg-main: #fefcfb;
+            --bg-header: #fdfbf7;
+            --bg-settings: #fdfbf7;
+            --bg-panel-source: #fdfaf5;
+            --bg-panel-translation: #fbf5ec;
+            --bg-card: #ffffff;
+            --bg-pill: #ffffff;
+
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --text-tertiary: #9ca3af;
+            --text-placeholder: #d1d5db;
+            --text-label: rgba(20, 83, 45, 0.4);
+            --text-error: #f87171;
+
+            --accent-primary: #3c6034;
+            --accent-green: #16a34a;
+            --accent-green-hover: #15803d;
+
+            --border-light: #f3f4f6;
+            --border-medium: #e5e7eb;
+
+            --selection-bg: #dcfce7;
+            --selection-text: #14532d;
+
+            --toggle-off: #d1d5db;
+            --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+        }
+
+        :root[data-theme="dark"] {
+            --bg-main: #1a1a1a;
+            --bg-header: #222222;
+            --bg-settings: #222222;
+            --bg-panel-source: #252525;
+            --bg-panel-translation: #2a2a2a;
+            --bg-card: #2d2d2d;
+            --bg-pill: #333333;
+
+            --text-primary: #e5e7eb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #9ca3af;
+            --text-placeholder: #4b5563;
+            --text-label: rgba(134, 239, 172, 0.5);
+            --text-error: #f87171;
+
+            --accent-primary: #86efac;
+            --accent-green: #22c55e;
+            --accent-green-hover: #16a34a;
+
+            --border-light: #333333;
+            --border-medium: #404040;
+
+            --selection-bg: #14532d;
+            --selection-text: #86efac;
+
+            --toggle-off: #4b5563;
+            --scrollbar-thumb: rgba(255, 255, 255, 0.3);
+        }
+
         .drag-handle {
             -webkit-app-region: drag;
             cursor: move;
@@ -48,7 +109,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
+            background: var(--scrollbar-thumb);
             border-radius: 2px;
         }
 
@@ -65,30 +126,77 @@
             overflow: hidden;
             pointer-events: none;
         }
+
+        /* Themed text elements */
+        .themed-textarea::placeholder {
+            color: var(--text-placeholder);
+        }
+
+        .themed-textarea::selection {
+            background: var(--selection-bg);
+            color: var(--selection-text);
+        }
+
+        .themed-output {
+            color: var(--text-placeholder);
+        }
+
+        .themed-output.has-content {
+            color: var(--text-primary);
+        }
+
+        .themed-output.has-error {
+            color: var(--text-error);
+        }
+
+        .themed-output::selection {
+            background: var(--selection-bg);
+            color: var(--selection-text);
+        }
+
+        /* Themed toggle */
+        .themed-toggle::after {
+            background: var(--toggle-bg, var(--bg-card));
+        }
+
+        .themed-toggle:has(input:checked) {
+            background: var(--accent-green) !important;
+        }
+
+        /* Themed select */
+        .themed-select:focus {
+            --tw-ring-color: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .themed-select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
     </style>
 </head>
 
 <body class="overflow-hidden font-sans select-none bg-transparent">
     <!-- Main Card -->
-    <div class="bg-[#fefcfb] rounded-[2rem] h-screen flex flex-col relative overflow-hidden">
+    <div class="rounded-[2rem] h-screen flex flex-col relative overflow-hidden" style="background: var(--bg-main);">
 
         <!-- Header (Drag Handle) -->
         <div id="main-header"
-            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-[#fdfbf7] z-10 relative transition-all duration-500 ease-in-out">
+            class="flex justify-center items-center gap-6 py-6 border-b drag-handle shrink-0 z-10 relative transition-all duration-500 ease-in-out" style="background: var(--bg-header); border-color: var(--border-light);">
 
             <!-- German Pill -->
             <div id="header-controls" class="flex justify-center items-center gap-6 transition-all duration-500 ease-in-out">
-                <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
+                <div class="flex items-center gap-2 px-6 py-2 rounded-full border shadow-sm" style="background: var(--bg-pill); border-color: var(--border-medium);">
                     <span id="sourceLang"
-                        class="text-gray-800 text-lg font-medium min-w-[80px] text-center">German</span>
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="text-lg font-medium min-w-[80px] text-center" style="color: var(--text-primary);">German</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-tertiary);">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
 
                 <!-- Swap Button -->
                 <button id="swapBtn"
-                    class="cursor-pointer text-[#3c6034] hover:rotate-180 transition-all p-2 rounded-full hover:bg-gray-100 no-drag duration-300">
+                    class="cursor-pointer hover:rotate-180 transition-all p-2 rounded-full no-drag duration-300" style="color: var(--accent-primary);">
                     <svg width="24" height="24" viewBox="0 0 48 48" fill="currentColor" stroke="currentColor"
                         stroke-width="1.0">
                         <path d="M33.5,23.6a2.1,2.1,0,0,0-2.7-.2,1.9,1.9,0,0,0-.2,3L35.2,31H8a2,2,0,0,0,0,4H35.2l-4.6,4.6a1.9,1.9,0,0,0,.2,3,2.1,2.1,0,0,0,2.7-.2l7.9-8a1.9,1.9,0,0,0,0-2.8Z"></path> <path d="M14.5,24.4a2.1,2.1,0,0,0,2.7.2,1.9,1.9,0,0,0,.2-3L12.8,17H40a2,2,0,0,0,0-4H12.8l4.6-4.6a1.9,1.9,0,0,0-.2-3,2.1,2.1,0,0,0-2.7.2l-7.9,8a1.9,1.9,0,0,0,0,2.8Z"/>
@@ -96,10 +204,10 @@
                 </button>
 
                 <!-- English Pill -->
-                <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
+                <div class="flex items-center gap-2 px-6 py-2 rounded-full border shadow-sm" style="background: var(--bg-pill); border-color: var(--border-medium);">
                     <span id="targetLang"
-                        class="text-gray-800 text-lg font-medium min-w-[80px] text-center">English</span>
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="text-lg font-medium min-w-[80px] text-center" style="color: var(--text-primary);">English</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-tertiary);">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                 </div>
@@ -107,7 +215,7 @@
 
             <!-- Settings Button (Absolute Right) -->
             <button id="settingsBtn"
-                class="cursor-pointer absolute right-6 top-1/2 -translate-y-1/2 text-[#3c6034] hover:rotate-90 transition-all no-drag p-2 rounded-full hover:bg-gray-100 duration-300">
+                class="cursor-pointer absolute right-6 top-1/2 -translate-y-1/2 hover:rotate-90 transition-all no-drag p-2 rounded-full duration-300" style="color: var(--accent-primary);">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path
                         d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
@@ -125,41 +233,40 @@
                 class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out">
                 <div class="flex flex-1 min-h-0">
                     <!-- Source Panel (Lighter Cream) -->
-                    <div class="flex-1 flex flex-col p-8 bg-[#fdfaf5]  relative group">
-                        <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Source Text
+                    <div class="flex-1 flex flex-col p-8 relative group" style="background: var(--bg-panel-source);">
+                        <div class="text-[11px] font-bold uppercase tracking-wider mb-4" style="color: var(--text-label);">Source Text
                         </div>
                         <textarea id="inputText" spellcheck="false"
-                            class="w-full flex-1 bg-transparent resize-none text-gray-800 text-3xl placeholder-gray-300 outline-none leading-relaxed selection:bg-green-100 selection:text-green-900"
-                            placeholder="Enter your text here..." autofocus></textarea>
-                        <div id="inputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
+                            class="w-full flex-1 bg-transparent resize-none text-3xl outline-none leading-relaxed themed-textarea"
+                            placeholder="Enter your text here..." autofocus style="color: var(--text-primary);"></textarea>
+                        <div id="inputCount" class="text-xs font-medium mt-4" style="color: var(--text-label);">0 characters</div>
                     </div>
 
                     <!-- Translation Panel (Cream) -->
-                    <div class="flex-1 flex flex-col p-8 bg-[#fbf5ec] relative">
-                        <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Translation
+                    <div class="flex-1 flex flex-col p-8 relative" style="background: var(--bg-panel-translation);">
+                        <div class="text-[11px] font-bold uppercase tracking-wider mb-4" style="color: var(--text-label);">Translation
                         </div>
                         <div id="outputText"
-                            class="w-full flex-1 text-gray-300 text-3xl leading-relaxed selection:bg-green-100 selection:text-green-900 overflow-auto">
+                            class="w-full flex-1 text-3xl leading-relaxed themed-output overflow-auto">
                             Translation will appear here...
                         </div>
                         <!-- Loading Indicator -->
                         <div id="loading" class="hidden absolute top-8 right-8">
-                            <div class="w-6 h-6 border-2 border-green-200 border-t-green-600 rounded-full animate-spin">
-                            </div>
+                            <div class="w-6 h-6 border-2 rounded-full animate-spin" style="border-color: var(--border-medium); border-top-color: var(--accent-green);"></div>
                         </div>
-                        <div id="outputCount" class="text-xs font-medium text-green-900/40 mt-4">0 characters</div>
+                        <div id="outputCount" class="text-xs font-medium mt-4" style="color: var(--text-label);">0 characters</div>
                     </div>
                 </div>
             </div>
 
             <!-- Settings View -->
             <div id="settings-view"
-                class="absolute inset-0 flex flex-col bg-[#fdfbf7] w-full h-full transition-all duration-500 ease-in-out translate-x-full opacity-0 overflow-y-auto">
+                class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out translate-x-full opacity-90 overflow-y-auto" style="background: var(--bg-settings);">
 
                 <!-- Header with Close Button (Sticky & Draggable) -->
-                <div class="sticky top-0 flex items-center justify-between px-12 py-8 bg-[#fdfbf7] z-10 drag-handle">
-                    <h2 class="text-4xl font-serif text-gray-800">Settings</h2>
-                    <button id="closeSettingsBtn" class="cursor-pointer text-[#3c6034] hover:rotate-90 transition-all no-drag p-2 rounded-full hover:bg-gray-100 duration-300">
+                <div class="sticky top-0 flex items-center justify-between px-12 py-8 z-10 drag-handle" style="background: var(--bg-settings);">
+                    <h2 class="text-4xl font-serif" style="color: var(--text-primary);">Settings</h2>
+                    <button id="closeSettingsBtn" class="cursor-pointer hover:rotate-90 transition-all no-drag p-2 rounded-full duration-300" style="color: var(--accent-primary);">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
@@ -169,45 +276,44 @@
                 <div class="flex flex-col gap-4 max-w-9/10 mx-auto w-full px-12 pb-12">
 
                     <!-- Spell Check -->
-                    <div class="p-5 rounded-2xl border border-gray-200 bg-white">
+                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex items-start justify-between">
                             <div class="flex flex-col">
-                                <span class="text-gray-900 font-medium text-lg">Spell Check</span>
-                                <span class="text-gray-500 text-sm mt-1">Enable spell checking while typing</span>
+                                <span class="font-medium text-lg" style="color: var(--text-primary);">Spell Check</span>
+                                <span class="text-sm mt-1" style="color: var(--text-secondary);">Enable spell checking while typing</span>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
                                 <input type="checkbox" id="spellcheckToggle" class="sr-only peer" checked>
-                                <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-600"></div>
+                                <div class="w-14 h-8 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-1 after:left-1 after:rounded-full after:h-6 after:w-6 after:transition-all themed-toggle" style="background: var(--toggle-off); --toggle-bg: var(--bg-card);"></div>
                             </label>
                         </div>
                     </div>
 
                     <!-- Start on Startup -->
-                    <div class="p-5 rounded-2xl border border-gray-200 bg-white">
+                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex items-start justify-between">
                             <div class="flex flex-col">
-                                <span class="text-gray-900 font-medium text-lg">Start on Startup</span>
-                                <span class="text-gray-500 text-sm mt-1">Launch QuickGerman when your computer starts</span>
+                                <span class="font-medium text-lg" style="color: var(--text-primary);">Start on Startup</span>
+                                <span class="text-sm mt-1" style="color: var(--text-secondary);">Launch QuickGerman when your computer starts</span>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
                                 <input type="checkbox" id="startOnStartupToggle" class="sr-only peer">
-                                <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-600"></div>
+                                <div class="w-14 h-8 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-1 after:left-1 after:rounded-full after:h-6 after:w-6 after:transition-all themed-toggle" style="background: var(--toggle-off); --toggle-bg: var(--bg-card);"></div>
                             </label>
                         </div>
                     </div>
 
                     <!-- Theme -->
-                    <div class="p-5 rounded-2xl border border-gray-200 bg-white">
+                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex flex-col gap-3">
-                            <span class="text-gray-900 font-medium text-lg">Theme</span>
+                            <span class="font-medium text-lg" style="color: var(--text-primary);">Theme</span>
                             <div class="relative">
                                 <select id="themeSelect"
-                                    class="w-full px-4 py-3 bg-white border border-gray-200 text-gray-900 text-base rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block appearance-none cursor-pointer outline-none">
+                                    class="w-full px-4 py-3 border text-base rounded-xl focus:ring-2 block appearance-none cursor-pointer outline-none themed-select" style="background: var(--bg-card); border-color: var(--border-medium); color: var(--text-primary); --ring-color: var(--accent-green);">
                                     <option value="light">Light</option>
                                     <option value="dark">Dark</option>
-                                    <option value="sepia">Sepia</option>
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4" style="color: var(--text-secondary);">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>
@@ -217,12 +323,12 @@
                     </div>
 
                     <!-- Hotkey -->
-                    <div class="p-5 rounded-2xl border border-gray-200 bg-white">
+                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex flex-col gap-3">
-                            <span class="text-gray-900 font-medium text-lg">Hotkey to Open</span>
+                            <span class="font-medium text-lg" style="color: var(--text-primary);">Hotkey to Open</span>
                             <div class="relative">
                                 <select id="hotkeySelect"
-                                    class="w-full px-4 py-3 bg-white border border-gray-200 text-gray-900 text-base rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block appearance-none cursor-pointer outline-none">
+                                    class="w-full px-4 py-3 border text-base rounded-xl focus:ring-2 block appearance-none cursor-pointer outline-none themed-select" style="background: var(--bg-card); border-color: var(--border-medium); color: var(--text-primary); --ring-color: var(--accent-green);">
                                     <option value="ctrl+`">Ctrl + `</option>
                                     <option value="ctrl+shift+t">Ctrl + Shift + T</option>
                                     <option value="ctrl+shift+q">Ctrl + Shift + Q</option>
@@ -230,7 +336,7 @@
                                     <option value="alt+`">Alt + `</option>
                                     <option value="alt+q">Alt + Q</option>
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4" style="color: var(--text-secondary);">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                     </svg>

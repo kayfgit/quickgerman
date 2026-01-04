@@ -51,7 +51,7 @@ async function doTranslate() {
 
     if (!text) {
         outputText.textContent = 'Translation will appear here...';
-        outputText.className = 'w-full flex-1 text-gray-300 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
+        outputText.className = 'w-full flex-1 text-3xl leading-relaxed themed-output overflow-auto';
         updateCharCounts();
         return;
     }
@@ -68,17 +68,17 @@ async function doTranslate() {
         if (requestId === currentRequestId) {
             if (result) {
                 outputText.textContent = result;
-                outputText.className = 'w-full flex-1 text-gray-800 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
+                outputText.className = 'w-full flex-1 text-3xl leading-relaxed themed-output has-content overflow-auto';
             } else {
                 outputText.textContent = 'No translation found';
-                outputText.className = 'w-full flex-1 text-gray-300 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
+                outputText.className = 'w-full flex-1 text-3xl leading-relaxed themed-output overflow-auto';
             }
             updateCharCounts();
         }
     } catch (err) {
         if (requestId === currentRequestId) {
             outputText.textContent = 'Translation error';
-            outputText.className = 'w-full flex-1 text-red-400 text-3xl leading-relaxed select-text selection:bg-green-100 selection:text-green-900 overflow-auto';
+            outputText.className = 'w-full flex-1 text-3xl leading-relaxed themed-output has-error overflow-auto';
             updateCharCounts();
         }
     } finally {
@@ -197,6 +197,11 @@ function toggleSettings() {
     }
 }
 
+// Theme Management
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+}
+
 // Initialize Settings
 async function initSettings() {
     try {
@@ -210,6 +215,7 @@ async function initSettings() {
 
         // Apply Logic
         applySpellcheck(appSettings.spellcheck);
+        applyTheme(appSettings.theme || 'light');
 
     } catch (e) {
         console.error('Failed to init settings:', e);
@@ -243,7 +249,7 @@ startOnStartupToggle.addEventListener('change', (e) => {
 
 themeSelect.addEventListener('change', (e) => {
     appSettings.theme = e.target.value;
-    // Theme application logic would go here
+    applyTheme(e.target.value);
     saveSettings();
 });
 
