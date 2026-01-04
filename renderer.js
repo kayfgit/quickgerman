@@ -26,6 +26,7 @@ let appSettings = {
 const headerControls = document.getElementById('header-controls');
 const settingsBtn = document.getElementById('settingsBtn');
 const mainHeader = document.getElementById('main-header');
+const mainCard = document.getElementById('main-card');
 const translatorView = document.getElementById('translator-view');
 const settingsView = document.getElementById('settings-view');
 
@@ -153,6 +154,9 @@ function toggleSettings() {
         // Switch to Settings (Portrait 400x800)
 
         // Start the transition sequence
+        // 0. Remove top rounded corners
+        mainCard.classList.add('settings-mode');
+
         // 1. Fade out and scale down header controls first
         headerControls.classList.add('opacity-0', 'scale-90');
 
@@ -190,9 +194,12 @@ function toggleSettings() {
         setTimeout(() => {
             // 4. Fade in header controls
             headerControls.classList.remove('opacity-0', 'scale-90');
+
+            // 5. Restore top rounded corners
+            mainCard.classList.remove('settings-mode');
         }, 300);
 
-        // 5. Switch Mode (Main process handles size animation)
+        // 6. Switch Mode (Main process handles size animation)
         ipcRenderer.send('set-mode', 'translation');
     }
 }

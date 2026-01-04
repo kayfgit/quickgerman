@@ -159,7 +159,7 @@
             background: var(--toggle-bg, var(--bg-card));
         }
 
-        .themed-toggle:has(input:checked) {
+        input.peer:checked ~ .themed-toggle {
             background: var(--accent-green) !important;
         }
 
@@ -173,12 +173,27 @@
             background: var(--bg-card);
             color: var(--text-primary);
         }
+
+        /* Settings card hover effect */
+        .settings-card {
+            transition: border-color 0.2s ease-in-out;
+        }
+
+        .settings-card:hover {
+            border-color: var(--accent-green) !important;
+        }
+
+        /* Settings mode - remove top rounded corners */
+        #main-card.settings-mode {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
     </style>
 </head>
 
 <body class="overflow-hidden font-sans select-none bg-transparent">
     <!-- Main Card -->
-    <div class="rounded-[2rem] h-screen flex flex-col relative overflow-hidden" style="background: var(--bg-main);">
+    <div id="main-card" class="rounded-[2rem] h-screen flex flex-col relative overflow-hidden transition-all duration-500" style="background: var(--bg-main);">
 
         <!-- Header (Drag Handle) -->
         <div id="main-header"
@@ -276,7 +291,7 @@
                 <div class="flex flex-col gap-4 max-w-9/10 mx-auto w-full px-12 pb-12">
 
                     <!-- Spell Check -->
-                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
+                    <div class="p-5 rounded-2xl border settings-card" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex items-start justify-between">
                             <div class="flex flex-col">
                                 <span class="font-medium text-lg" style="color: var(--text-primary);">Spell Check</span>
@@ -290,7 +305,7 @@
                     </div>
 
                     <!-- Start on Startup -->
-                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
+                    <div class="p-5 rounded-2xl border settings-card" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex items-start justify-between">
                             <div class="flex flex-col">
                                 <span class="font-medium text-lg" style="color: var(--text-primary);">Start on Startup</span>
@@ -304,7 +319,7 @@
                     </div>
 
                     <!-- Theme -->
-                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
+                    <div class="p-5 rounded-2xl border settings-card" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex flex-col gap-3">
                             <span class="font-medium text-lg" style="color: var(--text-primary);">Theme</span>
                             <div class="relative">
@@ -323,7 +338,7 @@
                     </div>
 
                     <!-- Hotkey -->
-                    <div class="p-5 rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-medium);">
+                    <div class="p-5 rounded-2xl border settings-card" style="background: var(--bg-card); border-color: var(--border-medium);">
                         <div class="flex flex-col gap-3">
                             <span class="font-medium text-lg" style="color: var(--text-primary);">Hotkey to Open</span>
                             <div class="relative">
