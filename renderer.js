@@ -152,31 +152,47 @@ function toggleSettings() {
     if (isSettingsOpen) {
         // Switch to Settings (Portrait 400x800)
 
-        // 1. Hide Main Header
-        mainHeader.classList.add('hidden');
+        // Start the transition sequence
+        // 1. Fade out and scale down header controls first
+        headerControls.classList.add('opacity-0', 'scale-90');
 
-        // 2. Hide Translator View
-        translatorView.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+            // 2. Hide Main Header completely (collapse it)
+            mainHeader.classList.add('hidden-completely');
 
-        // 3. Show Settings View
-        settingsView.classList.remove('translate-x-full', 'opacity-0');
+            // 3. Hide Translator View
+            translatorView.classList.add('opacity-0', 'pointer-events-none');
+        }, 180);
 
-        // 4. Switch Mode (Main process handles size)
+        setTimeout(() => {
+            // 4. Show Settings View
+            settingsView.classList.remove('translate-x-full', 'opacity-0');
+        }, 250);
+
+        // 5. Switch Mode (Main process handles size animation)
         ipcRenderer.send('set-mode', 'settings');
 
     } else {
         // Switch to Translator (Landscape 800x400)
 
-        // 1. Hide Settings View
+        // Start the transition sequence
+        // 1. Hide Settings View first
         settingsView.classList.add('translate-x-full', 'opacity-0');
 
-        // 2. Show Main Header
-        mainHeader.classList.remove('hidden');
+        setTimeout(() => {
+            // 2. Show Main Header (restore it)
+            mainHeader.classList.remove('hidden-completely');
 
-        // 3. Show Translator View
-        translatorView.classList.remove('opacity-0', 'pointer-events-none');
+            // 3. Show Translator View
+            translatorView.classList.remove('opacity-0', 'pointer-events-none');
+        }, 180);
 
-        // 4. Switch Mode (Main process handles size)
+        setTimeout(() => {
+            // 4. Fade in header controls
+            headerControls.classList.remove('opacity-0', 'scale-90');
+        }, 300);
+
+        // 5. Switch Mode (Main process handles size animation)
         ipcRenderer.send('set-mode', 'translation');
     }
 }

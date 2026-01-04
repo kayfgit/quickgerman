@@ -166,7 +166,7 @@ function animateWindowSize(targetBounds, callback) {
     }
 
     const startTime = Date.now();
-    const duration = 300; // ms
+    const duration = 400; // ms
 
     const animate = () => {
         const now = Date.now();
@@ -212,10 +212,12 @@ ipcMain.on('set-mode', (event, mode) => {
     // 4. Update current mode tracker
     currentMode = mode;
 
-    // 5. Animate to new size
-    animateWindowSize(targetBounds, () => {
-        // Optional: Ensure center if switching for the first time or if things look weird?
-    });
+    // 5. Small delay to coordinate with renderer transitions, then animate to new size
+    setTimeout(() => {
+        animateWindowSize(targetBounds, () => {
+            // Animation complete
+        });
+    }, 100);
 });
 
 function createTray() {

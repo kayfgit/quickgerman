@@ -51,6 +51,20 @@
             background: rgba(255, 255, 255, 0.3);
             border-radius: 2px;
         }
+
+        /* Smooth scale transitions */
+        .scale-90 {
+            transform: scale(0.9);
+        }
+
+        /* Hide element completely */
+        .hidden-completely {
+            opacity: 0;
+            height: 0 !important;
+            min-height: 0 !important;
+            overflow: hidden;
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -60,10 +74,10 @@
 
         <!-- Header (Drag Handle) -->
         <div id="main-header"
-            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-[#fdfbf7] z-10 relative transition-all duration-300">
+            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-[#fdfbf7] z-10 relative transition-all duration-500 ease-in-out">
 
             <!-- German Pill -->
-            <div id="header-controls" class="flex justify-center items-center gap-6 transition-opacity duration-300">
+            <div id="header-controls" class="flex justify-center items-center gap-6 transition-all duration-500 ease-in-out">
                 <div class="flex items-center gap-2 px-6 py-2 rounded-full border border-gray-200 shadow-sm bg-white">
                     <span id="sourceLang"
                         class="text-gray-800 text-lg font-medium min-w-[80px] text-center">German</span>
