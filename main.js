@@ -337,19 +337,62 @@ function setupGlobalHotkey() {
     uIOhook.start();
 }
 
+// Settings Management
+const settingsFile = path.join(app.getPath('userData'), 'settings.json');
+
+const defaultSettings = {
+    spellcheck: true,
+    startOnStartup: false,
+    theme: 'light'
+};
+
+function loadSettings() {
+    try {
+        if (fs.existsSync(settingsFile)) {
+            return { ...defaultSettings, ...JSON.parse(fs.readFileSync(settingsFile, 'utf8')) };
+        }
+    } catch (e) {
+        console.error('Failed to load settings:', e);
+    }
+    return { ...defaultSettings };
+}
+
+function saveSettings(settings) {
+    try {
+        fs.writeFileSync(settingsFile, JSON.stringify(settings));
+    } catch (e) {
+        console.error('Failed to save settings:', e);
+    }
+}
+
+// Settings IPC
+ipcMain.handle('get-settings', () => {
+    return loadSettings();
+});
+
+ipcMain.on('save-settings', (event, settings) => {
+    saveSettings(settings);
+});
+
+ipcMain.on('set-startup', (event, enabled) => {
+    app.setLoginItemSettings({
+        openAtLogin: enabled,
+        openAsHidden: false
+    });
+});
+
 app.whenReady().then(() => {
     ensureVbsScript();
     createWindow();
     createTray();
     setupGlobalHotkey();
 
-    // Start on login
-    if (app.isPackaged) {
-        app.setLoginItemSettings({
-            openAtLogin: true,
-            path: app.getPath('exe')
-        });
-    }
+    // Apply startup setting on launch
+    const settings = loadSettings();
+    app.setLoginItemSettings({
+        openAtLogin: settings.startOnStartup || false,
+        openAsHidden: false
+    });
 });
 
 app.on('window-all-closed', (e) => {

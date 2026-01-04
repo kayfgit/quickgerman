@@ -56,11 +56,11 @@
 
 <body class="overflow-hidden font-sans select-none bg-transparent">
     <!-- Main Card -->
-    <div class="bg-white rounded-[2rem] shadow-2xl h-screen flex flex-col relative overflow-hidden">
+    <div class="bg-[#fefcfb] rounded-[2rem] h-screen flex flex-col relative overflow-hidden">
 
         <!-- Header (Drag Handle) -->
-        <div
-            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-white z-10 relative">
+        <div id="main-header"
+            class="flex justify-center items-center gap-6 py-6 border-b border-gray-100 drag-handle shrink-0 bg-[#fdfbf7] z-10 relative transition-all duration-300">
 
             <!-- German Pill -->
             <div id="header-controls" class="flex justify-center items-center gap-6 transition-opacity duration-300">
@@ -101,15 +101,6 @@
                     <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
-
-            <!-- Back Button (Initially Hidden) -->
-            <button id="backBtn"
-                class="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors no-drag p-2 rounded-full hover:bg-gray-50 hidden">
-                <!-- T icon circle -->
-                <div
-                    class="w-6 h-6 rounded-full border-2 border-current flex items-center justify-center font-bold text-xs">
-                    T</div>
-            </button>
         </div>
 
         <!-- Content Area Wrapper -->
@@ -119,8 +110,8 @@
             <div id="translator-view"
                 class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out">
                 <div class="flex flex-1 min-h-0">
-                    <!-- Source Panel (White) -->
-                    <div class="flex-1 flex flex-col p-8 bg-white relative group">
+                    <!-- Source Panel (Lighter Cream) -->
+                    <div class="flex-1 flex flex-col p-8 bg-[#fdfaf5]  relative group">
                         <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Source Text
                         </div>
                         <textarea id="inputText" spellcheck="false"
@@ -130,7 +121,7 @@
                     </div>
 
                     <!-- Translation Panel (Cream) -->
-                    <div class="flex-1 flex flex-col p-8 bg-[#FDFBF7] relative">
+                    <div class="flex-1 flex flex-col p-8 bg-[#fbf5ec] relative">
                         <div class="text-[11px] font-bold text-green-900/40 uppercase tracking-wider mb-4">Translation
                         </div>
                         <div id="outputText"
@@ -149,7 +140,69 @@
 
             <!-- Settings View -->
             <div id="settings-view"
-                class="absolute inset-0 flex flex-col p-8 bg-white w-full h-full transition-all duration-500 ease-in-out translate-x-full opacity-0">
+                class="absolute inset-0 flex flex-col bg-[#fdfbf7] w-full h-full transition-all duration-500 ease-in-out translate-x-full opacity-0 overflow-y-auto">
+
+                <!-- Header with Close Button (Sticky & Draggable) -->
+                <div class="sticky top-0 flex items-center justify-between px-12 py-8 bg-[#fdfbf7] z-10 drag-handle">
+                    <h2 class="text-4xl font-serif text-gray-800">Settings</h2>
+                    <button id="closeSettingsBtn" class="text-gray-400 hover:text-gray-600 transition-colors no-drag p-2 rounded-full hover:bg-gray-100">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex flex-col gap-4 max-w-md mx-auto w-full px-12 pb-12">
+
+                    <!-- Spell Check -->
+                    <div class="p-5 rounded-2xl border border-gray-200 bg-white">
+                        <div class="flex items-start justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-gray-900 font-medium text-lg">Spell Check</span>
+                                <span class="text-gray-500 text-sm mt-1">Enable spell checking while typing</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
+                                <input type="checkbox" id="spellcheckToggle" class="sr-only peer" checked>
+                                <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Start on Startup -->
+                    <div class="p-5 rounded-2xl border border-gray-200 bg-white">
+                        <div class="flex items-start justify-between">
+                            <div class="flex flex-col">
+                                <span class="text-gray-900 font-medium text-lg">Start on Startup</span>
+                                <span class="text-gray-500 text-sm mt-1">Launch QuickGerman when your computer starts</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-4">
+                                <input type="checkbox" id="startOnStartupToggle" class="sr-only peer">
+                                <div class="w-14 h-8 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-6 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-green-600"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Theme -->
+                    <div class="p-5 rounded-2xl border border-gray-200 bg-white">
+                        <div class="flex flex-col gap-3">
+                            <span class="text-gray-900 font-medium text-lg">Theme</span>
+                            <div class="relative">
+                                <select id="themeSelect"
+                                    class="w-full px-4 py-3 bg-white border border-gray-200 text-gray-900 text-base rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block appearance-none cursor-pointer outline-none">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="sepia">Sepia</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </div>

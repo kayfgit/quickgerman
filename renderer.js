@@ -15,11 +15,24 @@ let debounceTimer = null;
 let currentRequestId = 0; // Track request to prevent stale results
 let isSettingsOpen = false;
 
+// Settings State
+let appSettings = {
+    spellcheck: true,
+    startOnStartup: false,
+    theme: 'light'
+};
+
 const headerControls = document.getElementById('header-controls');
 const settingsBtn = document.getElementById('settingsBtn');
-const backBtn = document.getElementById('backBtn');
+const mainHeader = document.getElementById('main-header');
 const translatorView = document.getElementById('translator-view');
 const settingsView = document.getElementById('settings-view');
+
+// Settings Elements
+const spellcheckToggle = document.getElementById('spellcheckToggle');
+const startOnStartupToggle = document.getElementById('startOnStartupToggle');
+const themeSelect = document.getElementById('themeSelect');
+const closeSettingsBtn = document.getElementById('closeSettingsBtn');
 
 function updateCharCounts() {
     inputCount.textContent = `${inputText.value.length} characters`;
@@ -137,20 +150,16 @@ function toggleSettings() {
     if (isSettingsOpen) {
         // Switch to Settings (Portrait 400x800)
 
-        // 1. Hide Translator View
-        translatorView.classList.add('opacity-0', 'pointer-events-none');
+        // 1. Hide Main Header
+        mainHeader.classList.add('hidden');
 
-        // 2. Hide Header Controls
-        headerControls.classList.add('opacity-0', 'pointer-events-none');
+        // 2. Hide Translator View
+        translatorView.classList.add('opacity-0', 'pointer-events-none');
 
         // 3. Show Settings View
         settingsView.classList.remove('translate-x-full', 'opacity-0');
 
-        // 4. Toggle Buttons
-        settingsBtn.classList.add('hidden');
-        backBtn.classList.remove('hidden');
-
-        // 5. Switch Mode (Main process handles size)
+        // 4. Switch Mode (Main process handles size)
         ipcRenderer.send('set-mode', 'settings');
 
     } else {
@@ -159,23 +168,74 @@ function toggleSettings() {
         // 1. Hide Settings View
         settingsView.classList.add('translate-x-full', 'opacity-0');
 
-        // 2. Show Header Controls
-        headerControls.classList.remove('opacity-0', 'pointer-events-none');
+        // 2. Show Main Header
+        mainHeader.classList.remove('hidden');
 
         // 3. Show Translator View
         translatorView.classList.remove('opacity-0', 'pointer-events-none');
 
-        // 4. Toggle Buttons
-        settingsBtn.classList.remove('hidden');
-        backBtn.classList.add('hidden');
-
-        // 5. Switch Mode (Main process handles size)
+        // 4. Switch Mode (Main process handles size)
         ipcRenderer.send('set-mode', 'translation');
     }
 }
 
+// Initialize Settings
+async function initSettings() {
+    try {
+        appSettings = await ipcRenderer.invoke('get-settings');
+
+        // Apply UI state
+        spellcheckToggle.checked = appSettings.spellcheck;
+        startOnStartupToggle.checked = appSettings.startOnStartup || false;
+        themeSelect.value = appSettings.theme || 'light';
+
+        // Apply Logic
+        applySpellcheck(appSettings.spellcheck);
+
+    } catch (e) {
+        console.error('Failed to init settings:', e);
+    }
+}
+
+function applySpellcheck(enabled) {
+    inputText.spellcheck = enabled;
+    // Force re-render of spellcheck attributes if needed (usually automatic on focus/blur)
+    const currentVal = inputText.value;
+    inputText.value = '';
+    inputText.value = currentVal;
+}
+
+function saveSettings() {
+    ipcRenderer.send('save-settings', appSettings);
+}
+
+// Event Listeners for Settings
+spellcheckToggle.addEventListener('change', (e) => {
+    appSettings.spellcheck = e.target.checked;
+    applySpellcheck(appSettings.spellcheck);
+    saveSettings();
+});
+
+startOnStartupToggle.addEventListener('change', (e) => {
+    appSettings.startOnStartup = e.target.checked;
+    ipcRenderer.send('set-startup', e.target.checked);
+    saveSettings();
+});
+
+themeSelect.addEventListener('change', (e) => {
+    appSettings.theme = e.target.value;
+    // Theme application logic would go here
+    saveSettings();
+});
+
+// Close Settings Button
+closeSettingsBtn.addEventListener('click', toggleSettings);
+
+// Call init on load
+initSettings();
+
+// Toggle Button Listeners
 settingsBtn.addEventListener('click', toggleSettings);
-backBtn.addEventListener('click', toggleSettings);
 
 // Escape to hide (modified to close settings first if open)
 document.addEventListener('keydown', (e) => {
