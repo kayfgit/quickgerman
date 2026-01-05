@@ -241,7 +241,7 @@ function createTray() {
     tray.on('click', toggleWindow);
 }
 
-// Simulates Ctrl+C using VBScript (faster than PowerShell)
+// Simulates Ctrl+C using VBScript
 const vbsScriptPath = path.join(app.getPath('userData'), 'simulate_copy.vbs');
 
 function ensureVbsScript() {
@@ -259,34 +259,35 @@ WshShell.SendKeys "^c"
 }
 
 function simulateCopy(callback) {
-    // 1. Clear clipboard to ensure we don't read old data
-    clipboard.clear();
+    // Save original clipboard to restore if nothing is copied
+    const originalClipboard = clipboard.readText();
 
-    // 2. Execute VBScript to send Ctrl+C
+    // Execute Ctrl+C
     exec(`cscript //Nologo "${vbsScriptPath}"`, (error, stdout, stderr) => {
         if (error) {
-            console.error(`exec error: ${error}`);
+            console.error(`Copy error: ${error}`);
+            if (originalClipboard) {
+                clipboard.writeText(originalClipboard);
+            }
             callback('');
             return;
         }
 
-        // 3. Poll for clipboard content change (max 500ms)
-        let attempts = 0;
-        const maxAttempts = 10;
+        // Quick check for clipboard change (minimal delay)
+        setTimeout(() => {
+            const newText = clipboard.readText();
 
-        const checkClipboard = setInterval(() => {
-            const text = clipboard.readText();
-            attempts++;
-
-            if (text && text.trim().length > 0) {
-                clearInterval(checkClipboard);
-                callback(text);
-            } else if (attempts >= maxAttempts) {
-                clearInterval(checkClipboard);
-                // Even if empty, callback to finish (maybe user highlighted nothing)
+            if (newText !== originalClipboard && newText && newText.trim().length > 0) {
+                // Successfully copied new text
+                callback(newText);
+            } else {
+                // Nothing was copied, restore original
+                if (originalClipboard) {
+                    clipboard.writeText(originalClipboard);
+                }
                 callback('');
             }
-        }, 50); // Check every 50ms
+        }, 50); // Minimal 50ms delay
     });
 }
 
@@ -364,8 +365,11 @@ function setupGlobalHotkey() {
             if (modifiersMatch) {
                 // If window is NOT visible, we assume user might be highlighting text
                 if (!mainWindow || !mainWindow.isVisible()) {
+                    // Send Ctrl+C to capture selection
                     simulateCopy((text) => {
+                        // Then show window
                         showWindow();
+
                         if (mainWindow && text && text.trim().length > 0) {
                             // Send text to renderer
                             mainWindow.webContents.send('set-input', text);
