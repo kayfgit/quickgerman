@@ -154,9 +154,6 @@ function toggleSettings() {
         // Switch to Settings (Portrait 400x800)
 
         // Start the transition sequence
-        // 0. Remove top rounded corners
-        mainCard.classList.add('settings-mode');
-
         // 1. Fade out and scale down header controls first
         headerControls.classList.add('opacity-0', 'scale-90');
 
@@ -194,12 +191,9 @@ function toggleSettings() {
         setTimeout(() => {
             // 4. Fade in header controls
             headerControls.classList.remove('opacity-0', 'scale-90');
-
-            // 5. Restore top rounded corners
-            mainCard.classList.remove('settings-mode');
         }, 300);
 
-        // 6. Switch Mode (Main process handles size animation)
+        // 5. Switch Mode (Main process handles size animation)
         ipcRenderer.send('set-mode', 'translation');
     }
 }
@@ -257,6 +251,7 @@ startOnStartupToggle.addEventListener('change', (e) => {
 themeSelect.addEventListener('change', (e) => {
     appSettings.theme = e.target.value;
     applyTheme(e.target.value);
+    ipcRenderer.send('set-theme', e.target.value);
     saveSettings();
 });
 

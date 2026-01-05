@@ -1,6 +1,5 @@
 # TODOS:
 
-- add more options to settings like hotkey changing
 - fix settings button on hidden apps
 - fix transition between views
 - fix stuttering when dragging window

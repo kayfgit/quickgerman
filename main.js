@@ -22,8 +22,6 @@ const defaultState = {
     settings: { width: 400, height: 800 }
 };
 
-// Fix: Disable hardware acceleration to prevent flickering on Windows with transparent windows
-app.disableHardwareAcceleration();
 
 function loadState() {
     try {
@@ -66,9 +64,13 @@ function createWindow() {
     currentMode = 'translation';
     const startBounds = savedState.translation || defaultState.translation;
 
+    const settings = loadSettings();
+    const bgColor = settings.theme === 'dark' ? '#1a1a1a' : '#fefcfb';
+
     let windowOptions = {
         frame: false,
-        transparent: true,
+        transparent: false,
+        backgroundColor: bgColor,
         alwaysOnTop: true,
         skipTaskbar: true,
         resizable: true,
@@ -450,6 +452,12 @@ ipcMain.on('set-hotkey', (event, hotkey) => {
     if (tray) {
         tray.setToolTip(`QuickGerman - ${formatHotkeyForDisplay(hotkey)} to toggle`);
     }
+});
+
+ipcMain.on('set-theme', (event, theme) => {
+    if (!mainWindow) return;
+    const bgColor = theme === 'dark' ? '#1a1a1a' : '#fefcfb';
+    mainWindow.setBackgroundColor(bgColor);
 });
 
 app.whenReady().then(() => {

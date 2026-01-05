@@ -93,7 +93,7 @@
         }
 
         body {
-            background: transparent;
+            background: var(--bg-main);
         }
 
         textarea:focus {
@@ -182,101 +182,16 @@
         .settings-card:hover {
             border-color: var(--accent-green) !important;
         }
-
-        /* Settings mode - remove top rounded corners */
-        #main-card.settings-mode {
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-        }
     </style>
 </head>
 
-<body class="overflow-hidden font-sans select-none bg-transparent">
+<body class="overflow-hidden font-sans select-none">
     <!-- Main Card -->
-    <div id="main-card" class="rounded-[2rem] h-screen flex flex-col relative overflow-hidden transition-all duration-500" style="background: var(--bg-main);">
-
-        <!-- Header (Drag Handle) -->
-        <div id="main-header"
-            class="flex justify-center items-center gap-6 py-6 border-b drag-handle shrink-0 z-10 relative transition-all duration-500 ease-in-out" style="background: var(--bg-header); border-color: var(--border-light);">
-
-            <!-- German Pill -->
-            <div id="header-controls" class="flex justify-center items-center gap-6 transition-all duration-500 ease-in-out">
-                <div class="flex items-center gap-2 px-6 py-2 rounded-full border shadow-sm" style="background: var(--bg-pill); border-color: var(--border-medium);">
-                    <span id="sourceLang"
-                        class="text-lg font-medium min-w-[80px] text-center" style="color: var(--text-primary);">German</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-tertiary);">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-
-                <!-- Swap Button -->
-                <button id="swapBtn"
-                    class="cursor-pointer hover:rotate-180 transition-all p-2 rounded-full no-drag duration-300" style="color: var(--accent-primary);">
-                    <svg width="24" height="24" viewBox="0 0 48 48" fill="currentColor" stroke="currentColor"
-                        stroke-width="1.0">
-                        <path d="M33.5,23.6a2.1,2.1,0,0,0-2.7-.2,1.9,1.9,0,0,0-.2,3L35.2,31H8a2,2,0,0,0,0,4H35.2l-4.6,4.6a1.9,1.9,0,0,0,.2,3,2.1,2.1,0,0,0,2.7-.2l7.9-8a1.9,1.9,0,0,0,0-2.8Z"></path> <path d="M14.5,24.4a2.1,2.1,0,0,0,2.7.2,1.9,1.9,0,0,0,.2-3L12.8,17H40a2,2,0,0,0,0-4H12.8l4.6-4.6a1.9,1.9,0,0,0-.2-3,2.1,2.1,0,0,0-2.7.2l-7.9,8a1.9,1.9,0,0,0,0,2.8Z"/>
-                    </svg>
-                </button>
-
-                <!-- English Pill -->
-                <div class="flex items-center gap-2 px-6 py-2 rounded-full border shadow-sm" style="background: var(--bg-pill); border-color: var(--border-medium);">
-                    <span id="targetLang"
-                        class="text-lg font-medium min-w-[80px] text-center" style="color: var(--text-primary);">English</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-tertiary);">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </div>
-            </div>
-
-            <!-- Settings Button (Absolute Right) -->
-            <button id="settingsBtn"
-                class="cursor-pointer absolute right-6 top-1/2 -translate-y-1/2 hover:rotate-90 transition-all no-drag p-2 rounded-full duration-300" style="color: var(--accent-primary);">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-            </button>
-        </div>
-
-        <!-- Content Area Wrapper -->
-        <div class="relative flex-1 min-h-0 w-full overflow-hidden">
-
-            <!-- Translator View -->
-            <div id="translator-view"
-                class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out">
-                <div class="flex flex-1 min-h-0">
-                    <!-- Source Panel (Lighter Cream) -->
-                    <div class="flex-1 flex flex-col p-8 relative group" style="background: var(--bg-panel-source);">
-                        <div class="text-[11px] font-bold uppercase tracking-wider mb-4" style="color: var(--text-label);">Source Text
-                        </div>
-                        <textarea id="inputText" spellcheck="false"
-                            class="w-full flex-1 bg-transparent resize-none text-3xl outline-none leading-relaxed themed-textarea"
-                            placeholder="Enter your text here..." autofocus style="color: var(--text-primary);"></textarea>
-                        <div id="inputCount" class="text-xs font-medium mt-4" style="color: var(--text-label);">0 characters</div>
-                    </div>
-
-                    <!-- Translation Panel (Cream) -->
-                    <div class="flex-1 flex flex-col p-8 relative" style="background: var(--bg-panel-translation);">
-                        <div class="text-[11px] font-bold uppercase tracking-wider mb-4" style="color: var(--text-label);">Translation
-                        </div>
-                        <div id="outputText"
-                            class="w-full flex-1 text-3xl leading-relaxed themed-output overflow-auto">
-                            Translation will appear here...
-                        </div>
-                        <!-- Loading Indicator -->
-                        <div id="loading" class="hidden absolute top-8 right-8">
-                            <div class="w-6 h-6 border-2 rounded-full animate-spin" style="border-color: var(--border-medium); border-top-color: var(--accent-green);"></div>
-                        </div>
-                        <div id="outputCount" class="text-xs font-medium mt-4" style="color: var(--text-label);">0 characters</div>
-                    </div>
-                </div>
-            </div>
+    <div id="main-card" class="h-screen flex flex-col relative overflow-hidden transition-all duration-500" style="background: var(--bg-main);">
 
             <!-- Settings View -->
             <div id="settings-view"
-                class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out translate-x-full opacity-90 overflow-y-auto" style="background: var(--bg-settings);">
+                class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out translate-x-full overflow-y-auto z-20" style="background: var(--bg-settings);">
 
                 <!-- Header with Close Button (Sticky & Draggable) -->
                 <div class="sticky top-0 flex items-center justify-between px-12 py-8 z-10 drag-handle" style="background: var(--bg-settings);">
@@ -362,6 +277,85 @@
 
                 </div>
             </div>
+        <!-- Header (Drag Handle) -->
+        <div id="main-header"
+            class="flex justify-center items-center gap-6 py-6 border-b drag-handle shrink-0 z-10 relative transition-all duration-500 ease-in-out" style="background: var(--bg-header); border-color: var(--border-light);">
+
+            <!-- German Pill -->
+            <div id="header-controls" class="flex justify-center items-center gap-6 transition-all duration-500 ease-in-out">
+                <div class="flex items-center gap-2 px-6 py-2 rounded-full border shadow-sm" style="background: var(--bg-pill); border-color: var(--border-medium);">
+                    <span id="sourceLang"
+                        class="text-lg font-medium min-w-[80px] text-center" style="color: var(--text-primary);">German</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-tertiary);">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+
+                <!-- Swap Button -->
+                <button id="swapBtn"
+                    class="cursor-pointer hover:rotate-180 transition-all p-2 rounded-full no-drag duration-300" style="color: var(--accent-primary);">
+                    <svg width="24" height="24" viewBox="0 0 48 48" fill="currentColor" stroke="currentColor"
+                        stroke-width="1.0">
+                        <path d="M33.5,23.6a2.1,2.1,0,0,0-2.7-.2,1.9,1.9,0,0,0-.2,3L35.2,31H8a2,2,0,0,0,0,4H35.2l-4.6,4.6a1.9,1.9,0,0,0,.2,3,2.1,2.1,0,0,0,2.7-.2l7.9-8a1.9,1.9,0,0,0,0-2.8Z"></path> <path d="M14.5,24.4a2.1,2.1,0,0,0,2.7.2,1.9,1.9,0,0,0,.2-3L12.8,17H40a2,2,0,0,0,0-4H12.8l4.6-4.6a1.9,1.9,0,0,0-.2-3,2.1,2.1,0,0,0-2.7.2l-7.9,8a1.9,1.9,0,0,0,0,2.8Z"/>
+                    </svg>
+                </button>
+
+                <!-- English Pill -->
+                <div class="flex items-center gap-2 px-6 py-2 rounded-full border shadow-sm" style="background: var(--bg-pill); border-color: var(--border-medium);">
+                    <span id="targetLang"
+                        class="text-lg font-medium min-w-[80px] text-center" style="color: var(--text-primary);">English</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-tertiary);">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Settings Button (Absolute Right) -->
+            <button id="settingsBtn"
+                class="cursor-pointer absolute right-6 top-1/2 -translate-y-1/2 hover:rotate-90 transition-all no-drag p-2 rounded-full duration-300" style="color: var(--accent-primary);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Content Area Wrapper -->
+        <div class="relative flex-1 min-h-0 w-full overflow-hidden">
+
+            <!-- Translator View -->
+            <div id="translator-view"
+                class="absolute inset-0 flex flex-col w-full h-full transition-all duration-500 ease-in-out">
+                <div class="flex flex-1 min-h-0">
+                    <!-- Source Panel (Lighter Cream) -->
+                    <div class="flex-1 flex flex-col p-8 relative group" style="background: var(--bg-panel-source);">
+                        <div class="text-[11px] font-bold uppercase tracking-wider mb-4" style="color: var(--text-label);">Source Text
+                        </div>
+                        <textarea id="inputText" spellcheck="false"
+                            class="w-full flex-1 bg-transparent resize-none text-3xl outline-none leading-relaxed themed-textarea"
+                            placeholder="Enter your text here..." autofocus style="color: var(--text-primary);"></textarea>
+                        <div id="inputCount" class="text-xs font-medium mt-4" style="color: var(--text-label);">0 characters</div>
+                    </div>
+
+                    <!-- Translation Panel (Cream) -->
+                    <div class="flex-1 flex flex-col p-8 relative" style="background: var(--bg-panel-translation);">
+                        <div class="text-[11px] font-bold uppercase tracking-wider mb-4" style="color: var(--text-label);">Translation
+                        </div>
+                        <div id="outputText"
+                            class="w-full flex-1 text-3xl leading-relaxed themed-output overflow-auto">
+                            Translation will appear here...
+                        </div>
+                        <!-- Loading Indicator -->
+                        <div id="loading" class="hidden absolute top-8 right-8">
+                            <div class="w-6 h-6 border-2 rounded-full animate-spin" style="border-color: var(--border-medium); border-top-color: var(--accent-green);"></div>
+                        </div>
+                        <div id="outputCount" class="text-xs font-medium mt-4" style="color: var(--text-label);">0 characters</div>
+                    </div>
+                </div>
+            </div>
+
 
         </div>
 
