@@ -20,6 +20,20 @@ https://github.com/user-attachments/assets/efc4e8e4-de62-4ca3-9b43-2b530cf16bbc
 
 ---
 
+## Why QuickGerman?
+
+Most translation tools require you to:
+1. Highlight text
+2. Copy it (`Ctrl + C`)
+3. Switch to browser or translation app
+4. Paste it (`Ctrl + V`)
+5. Wait for translation
+6. Switch back to your original app
+
+QuickGerman eliminates steps 2-6. Just highlight and press your hotkey. That's it.
+
+---
+
 ## Features
 
 ### Instant Translation with Highlight & Hotkey
@@ -81,20 +95,6 @@ npm run build
 - **Text Capture**: Native Windows automation via VBScript for seamless highlight-to-translate
 - **Installer**: Built with electron-builder (NSIS)
 - **Minimum Requirements**: Windows 7 or later
-
----
-
-## Why QuickGerman?
-
-Most translation tools require you to:
-1. Highlight text
-2. Copy it (`Ctrl + C`)
-3. Switch to browser or translation app
-4. Paste it (`Ctrl + V`)
-5. Wait for translation
-6. Switch back to your original app
-
-QuickGerman eliminates steps 2-6. Just highlight and press your hotkey. That's it.
 
 ---
 
