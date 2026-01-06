@@ -223,7 +223,8 @@ ipcMain.on('set-mode', (event, mode) => {
 });
 
 function createTray() {
-    const icon = path.join(__dirname, 'build', 'icons', 'icon.ico')
+    // Use icon from project root (works in both dev and production)
+    const icon = path.join(__dirname, 'icon.ico');
     const settings = loadSettings();
     const hotkeyDisplay = formatHotkeyForDisplay(settings.hotkey || 'ctrl+`');
 
@@ -232,7 +233,6 @@ function createTray() {
 
     const contextMenu = Menu.buildFromTemplate([
         { label: `Show/Hide (${hotkeyDisplay})`, click: toggleWindow },
-        { label: 'Settings', click: toggleWindow },
         { type: 'separator' },
         { label: 'Quit', click: () => app.quit() }
     ]);
