@@ -4,7 +4,7 @@ A lightning-fast, lightweight Electron app for translating German text to Englis
 
 ## Demo
 
-https://github.com/user-attachments/assets/efc4e8e4-de62-4ca3-9b43-2b530cf16bbc
+![Image](https://github.com/user-attachments/assets/20652407-183b-42cd-b33e-7d6e921e8e96)
 
 ## Light Theme
 
